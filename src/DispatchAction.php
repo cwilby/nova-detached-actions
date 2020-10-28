@@ -33,11 +33,11 @@ class DispatchAction extends NovaDispatchAction
         ActionFields $fields
     ) {
         if ($action instanceof ShouldQueue) {
-            return static::queueForModels($request, $action, $method, $models);
+            return static::queueForModels($request, $action, $method, new \Illuminate\Database\Eloquent\Collection());
         }
 
         return Transaction::run(function ($batchId) use ($fields, $request, $action, $method, $models) {
-            if (! $action->withoutActionEvents) {
+            if (!$action->withoutActionEvents) {
                 Nova::actionEvent()->createForModels($request, $action, $batchId, $models);
             }
 
